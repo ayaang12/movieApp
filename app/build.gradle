@@ -12,5 +12,5 @@ dependencies {
 }
 
 application {
-    mainClass = 'Main'
+    mainClass = 'movieapp.Main'
 }
