@@ -1,6 +1,7 @@
 package movieapp;
 
 import java.util.Scanner;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Main {
@@ -13,11 +14,11 @@ public class Main {
         String genre = scanner.nextLine();
 
         String json = service.fetchMovies(genre);
-
+        
         ObjectMapper mapper = new ObjectMapper();
-        var tree = mapper.readTree(json);
+        JsonNode tree = mapper.readTree(json);
 
-        var titles = tree.get("titles");
+        JsonNode titles = tree.get("titles");
 
         System.out.println("Top ten movies:");
 

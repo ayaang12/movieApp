@@ -6,7 +6,7 @@ import java.net.URI;
 
 public class MovieRecommenderService {
 
-    private final String apiKey = "PUT_YOUR_KEY_HERE";
+    private final String apiKey = "BOIBOIBOIBOI";
 
     public String fetchMovies(String genreId) throws Exception {
 
