@@ -6,24 +6,15 @@ import java.net.URI;
 
 public class MovieRecommenderService {
 
-    private final String apiKey = "BOIBOIBOIBOI";
+    private final String apiKey = "0R8EPlKofuR32A169zdhQVjkotjeWRt5Vj6KpkKa";
 
     public String fetchMovies(String genreId) throws Exception {
 
-        String url = "https://api.watchmode.com/v1/list-titles/?apiKey="
-                + apiKey
-                + "&genres=" + genreId
-                + "&types=movie"
-                + "&sort_by=popularity_desc";
+        String url = "https://api.watchmode.com/v1/list-titles/?apiKey=" + apiKey + "&genres=" + genreId + "&types=movie" + "&sort_by=popularity_desc";
 
         HttpClient client = HttpClient.newHttpClient();
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .build();
-
-        HttpResponse<String> response =
-                client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         return response.body();
     }
