@@ -1,0 +1,1 @@
+The purpose of this project is to help people that do not know what movie to watch. The function is that the user gives the app a movie genre, and the app returns the top 10 movies within thay genre.
