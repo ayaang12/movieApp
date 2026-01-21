@@ -1,30 +1,85 @@
 package movieapp;
-import java.util.Scanner;
-import com.google.gson.*;
+
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;  
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
-        Scanner in = new Scanner(System.in);
-        MovieRecommenderService service = new MovieRecommenderService();
+    public static void main(String[] args) {
+         SwingUtilities.invokeLater(() -> {
+        JFrame frame = new JFrame("Movie Recommender");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 400);
 
-        System.out.print("Enter a genre name: ");
-        String input = in.nextLine().trim().toLowerCase();
-        String genreId = GenreMap.GENRES.get(input);
+        JTextField genreField = new JTextField(20);
+        JTextField streamingField = new JTextField(20);
 
-        if (genreId == null) {
-            System.out.println("Invalid Genre");
-            return;
-        }
+        JButton fetchButton = new JButton("Get Recommendations");
 
-        String json = service.fetchMovies(genreId);
-        JsonObject root = JsonParser.parseString(json).getAsJsonObject();
-        JsonArray titles = root.getAsJsonArray("titles");
+        JTextArea output = new JTextArea();
+        output.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(output);
 
-        System.out.println("Movie reccomendations:");
+        JPanel inputPanel = new JPanel();
+        inputPanel.add(new JLabel("Genre:"));
+        inputPanel.add(genreField);
+        inputPanel.add(new JLabel("Streaming services (comma-separated):"));
+        inputPanel.add(streamingField);
+        inputPanel.add(fetchButton);
+        frame.add(inputPanel, BorderLayout.NORTH);
+        frame.add(scrollPane, BorderLayout.CENTER);
 
-        for (int i = 0; i < Math.min(10, titles.size()); i++) {
-            JsonObject movie = titles.get(i).getAsJsonObject();
-            System.out.println(movie.get("title").getAsString());
-        }
-    }
+        fetchButton.addActionListener((ActionEvent e) -> {
+                try {
+                    String genreinput = genreField.getText().trim().toLowerCase();
+                    String genreId = GenreMap.GENRES.get(genreinput);
+                    String streamingServices = streamingField.getText().trim().toLowerCase();
+
+                    if (genreId == null) {
+                        output.setText("Invalid Genre");
+                        return;
+                    }
+
+                    if (streamingServices.isEmpty()) {
+                        output.setText("Invalid Streaming Service");
+                        return;
+                    }
+
+                    MovieRecommenderService service = new MovieRecommenderService();
+                    String json = service.fetchMovies(genreId, streamingServices);
+
+                    JsonObject root = JsonParser.parseString(json).getAsJsonObject();
+                    JsonArray titles = root.getAsJsonArray("titles");
+
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("Movie recommendations:\n\n");
+
+                    for (int i = 0; i < Math.min(25, titles.size()); i++) {
+                        JsonObject movie = titles.get(i).getAsJsonObject();
+                        sb.append(movie.get("title").getAsString()).append("\n");
+                    }
+
+                    output.setText(sb.toString());
+
+                } catch (Exception ex) {
+                    output.setText("Error fetching movies:\n" + ex.getMessage());
+                }
+            });
+
+            frame.setVisible(true);
+         });
+    
+}
 }
