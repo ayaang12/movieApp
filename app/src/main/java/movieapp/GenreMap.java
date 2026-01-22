@@ -3,7 +3,18 @@ package movieapp;
 import java.util.Map;
 
 public class GenreMap {
-
+/**
+ * A lookup table that converts user-provided genre names into the
+ * corresponding Watchmode genre IDs.
+ *
+ * <p>This map allows users to input genres using readable names
+ * (for example, {@code "comedy"} or {@code "science fiction"}),
+ * which are then translated into the numeric genre identifiers
+ * required by the Watchmode API.</p>
+ *
+ * <p>Using this mapping removes the need for users to know or remember
+ * Watchmode-specific IDs and ensures valid API requests are constructed.</p>
+ */
     public static final Map<String, String> GENRES = Map.ofEntries(
         Map.entry("action", "1"),
         Map.entry("action & adventure", "39"),
